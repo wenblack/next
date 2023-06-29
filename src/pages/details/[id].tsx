@@ -1,13 +1,14 @@
 import React from "react";
 import type { GetServerSideProps } from "next";
-import Layout from "../components/Layout";
-import Post, { PostProps } from "../components/Post";
+import Layout from "@/components/Layout";
+import Post, { PostProps } from "@/components/Post";
 import prisma from "@/lib/prisma";
 
+
 export const getServerSideProps: GetServerSideProps = async () => {
-  const feed = await prisma.post.findMany({
+    const feed = await prisma.post.findFirst({
     where: {
-      published: true,
+      id: 1,
     },
     include: {
       author: {
@@ -23,7 +24,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 type Props = {
-  feed: PostProps[];
+  feed: PostProps;
 };
 
 const Blog: React.FC<Props> = (props) => {
@@ -32,11 +33,7 @@ const Blog: React.FC<Props> = (props) => {
       <div className="page">
         <h1 className="text-black p-8">Public Feed</h1>
         <main>
-          {props.feed.map((post) => (
-            <div key={post.id} className="post">
-              <Post post={post} />
-            </div>
-          ))}
+              <Post post={props.feed} />
         </main>
       </div>
       <style jsx>{`
