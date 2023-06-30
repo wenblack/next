@@ -1,57 +1,45 @@
-import React from "react";
-import type { GetServerSideProps } from "next";
-import Layout from "@/components/Layout";
-import Post, { PostProps } from "@/components/Post";
-import prisma from "@/lib/prisma";
+import { LoadingPage } from '@/components/Loading';
+import {PostProps} from '@/components/Post';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
 
 
-export const getServerSideProps: GetServerSideProps = async () => {
-    const feed = await prisma.post.findFirst({
-    where: {
-      id: 1,
-    },
-    include: {
-      author: {
-        select: {
-          name: true,
-        },
-      },
-    },
-  });
-  return {
-    props: { feed },
-  };
-};
 
-type Props = {
-  feed: PostProps;
-};
+export default function Blog() {
+	// State to store the quote
+	const [response, setResponse] = useState<PostProps>();
+  const[loading, setLoading] = useState(false)
+  const router = useRouter()
 
-const Blog: React.FC<Props> = (props) => {
+	const fetchQuotes = async () => {
+		try {
+			const res = await axios.get(`/api/posts/${router.query.id}`, {
+			});
+			// Set the response to the state.
+			setResponse(res.data);
+      //Change loading page/state to false
+      setLoading(true)
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+  useEffect(()=>{
+    fetchQuotes()
+  })
+if(!loading){
   return (
-    <Layout>
-      <div className="page">
-        <h1 className="text-black p-8">Public Feed</h1>
-        <main>
-              <Post post={props.feed} />
-        </main>
-      </div>
-      <style jsx>{`
-        .post {
-          background: white;
-          transition: box-shadow 0.1s ease-in;
-        }
-
-        .post:hover {
-          box-shadow: 1px 1px 3px #aaa;
-        }
-
-        .post + .post {
-          margin-top: 2rem;
-        }
-      `}</style>
-    </Layout>
-  );
-};
-
-export default Blog;
+  <div className='flex flex-col gap-2 h-screen w-screen items-center justify-center'>
+    <h1>Loading...</h1>
+   <LoadingPage/>
+  </div>
+);
+}
+	return (
+		<div className='flex flex-col gap-2 h-screen w-screen items-center justify-center'>
+			<h1>Title : {response?.title}</h1>
+      <p>Content :{response?.content}</p>
+		</div>
+	);
+}
