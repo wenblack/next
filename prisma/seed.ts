@@ -1,70 +1,67 @@
-import { PrismaClient, Prisma } from '@prisma/client'
-
-const prisma = new PrismaClient()
-
-const userData: Prisma.UserCreateInput[] = [
-  {
-    name: 'Alice',
-    email: 'alice@prisma.io',
-    posts: {
-      create: [
-        {
-          title: 'Join the Prisma Slack',
-          content: 'https://slack.prisma.io',
-          published: true,
-        },
-      ],
-    },
-  },
-  {
-    name: 'Nilu',
-    email: 'nilu@prisma.io',
-    posts: {
-      create: [
-        {
-          title: 'Follow Prisma on Twitter',
-          content: 'https://www.twitter.com/prisma',
-          published: true,
-        },
-      ],
-    },
-  },
-  {
-    name: 'Mahmoud',
-    email: 'mahmoud@prisma.io',
-    posts: {
-      create: [
-        {
-          title: 'Ask a question about Prisma on GitHub',
-          content: 'https://www.github.com/prisma/prisma/discussions',
-          published: true,
-        },
-        {
-          title: 'Prisma on YouTube',
-          content: 'https://pris.ly/youtube',
-        },
-      ],
-    },
-  },
-]
+import bcrypt from 'bcryptjs'
+import prisma from '../src/lib/prisma'
 
 async function main() {
-  console.log(`Start seeding ...`)
-  for (const u of userData) {
-    const user = await prisma.user.create({
-      data: u,
-    })
-    console.log(`Created user with id: ${user.id}`)
-  }
-  console.log(`Seeding finished.`)
+  await prisma.categorie.upsert({
+    where: { name: 'Prato principal' },
+    update: {},
+    create: {
+      name: 'Prato principal',
+    },
+  })
+  
+  await prisma.categorie.upsert({
+    where: { name: 'Sobremesas' },
+    update: {},
+    create: {
+      name: 'Sobremesas',
+    },
+  })
+  await prisma.categorie.upsert({
+    where: { name: 'Bebidas' },
+    update: {},
+    create: {
+      name: 'Bebidas',
+    },
+  })
+
+  await prisma.user.upsert({
+    where: { email: 'bob@prisma.io' },
+    update: {},
+    create: {
+      email: 'bob@prisma.io',
+      name: 'Bob',
+      password: bcrypt.hashSync("password", 8),
+      isAdmin: false
+    },
+  })
+
+    await prisma.user.upsert({
+    where: { email: 'admin' },
+    update: {},
+    create: {
+      email: 'admin',
+      name: 'Administrator',
+      isAdmin:true,
+      password: bcrypt.hashSync("admin", 8),
+    },
+  })
+
+  await  prisma.product.create({
+    data :{
+        name: "Torradas de Parma ",
+        description: "Presunto de parma e rúcula em um pão com fermentação natural.",
+        imgUrl: "",
+        price :.97,
+    }
+  })
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
+  .catch((e) => {
     console.error(e)
-    await prisma.$disconnect()
     process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
   })
