@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import jwt from 'jsonwebtoken'
 
-const SECRET = process.env.JWT_SECRET_KEY || 'secret'
+const SECRET = process.env.JWT_SECRET_KEY || 'food-explorer'
 
 
 interface IPayload {
