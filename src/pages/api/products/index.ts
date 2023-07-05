@@ -4,16 +4,19 @@ import { HttpStatusCode } from 'axios';
 import login from '@/lib/login';
 
 
-// GET /api/post
+// GET products/
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     login(req, res)
-
-    const result = await prisma.product.findMany({
-    });
-    let total = result.length
-    if (total === 0)
-    res.status(HttpStatusCode.BadRequest).json({error : 'There is no registered product'});
-    else  
-    res.json({total ,products: result});
+    if(req.method === 'GET'){
+          const result = await prisma.product.findMany({
+          });
+          let total = result.length
+          if (total === 0)
+          res.status(HttpStatusCode.BadRequest).json({error : 'There is no registered product'});
+          else  
+          res.json({total ,products: result});
+    }else{
+       res.status(HttpStatusCode.MethodNotAllowed).json({error: 'Wrong method'});
+    }
   }
 
