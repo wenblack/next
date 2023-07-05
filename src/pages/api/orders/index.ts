@@ -8,11 +8,11 @@ import login from '@/lib/login';
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     login(req, res)
 
-    const result = await prisma.product.findMany({
+    const result = await prisma.order.findMany({
     });
     let total = result.length
     if (total === 0)
-    res.status(HttpStatusCode.BadRequest).json({error : 'There is no registered product'});
+    res.status(HttpStatusCode.BadRequest).json({message : "There is no order registered"});
     else  
     res.json({total ,products: result});
   }
