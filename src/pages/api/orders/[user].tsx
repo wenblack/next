@@ -10,7 +10,14 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     const result = await prisma.order.findMany({
         where:{
              user: String(user)
-        }
+        },select:{
+        amount:true,
+        product:true,
+        status:true,
+        productPrice:true
+      },orderBy:{
+        createdAt:'desc'
+      }
     })
     if(result === null)
     res.status(HttpStatusCode.NotFound).json({error : "Orders not Found for this user"})

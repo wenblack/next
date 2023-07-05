@@ -27,13 +27,22 @@ async function main() {
 
   await prisma.user.upsert({
     where: { email: 'bob@prisma.io' },
-    update: {},
+    update: {
+      orders:{
+        create:{
+          product:"Torradas de Parma ",
+          productPrice:50.97,
+          amount:2,
+          status:"pending"
+        }
+      }
+    },
     create: {
       email: 'bob@prisma.io',
       name: 'Bob',
       password: bcrypt.hashSync("password", 8),
       isAdmin: false
-    },
+    }
   })
 
     await prisma.user.upsert({
@@ -52,7 +61,7 @@ async function main() {
         name: "Torradas de Parma ",
         description: "Presunto de parma e rúcula em um pão com fermentação natural.",
         imgUrl: "",
-        price :.97,
+        price :50,
     }
   })
 }
