@@ -9,7 +9,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
   if(req.method === 'POST'){
     const {email, password} = req.body
     if(!email || !password){
-      res.status(HttpStatusCode.NotFound).json({error : 'Some required fields are missing'})
+      res.status(HttpStatusCode.BadRequest).json({error : 'Some required fields are missing'})
     }
     const userExists = await prisma.user.findUnique({
       where:{
@@ -18,7 +18,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
     })
       const isValidPassword = await bcrypt.compare(password, String(userExists?.password));
       if(!userExists)
-        res.status(HttpStatusCode.NotFound).json({error : 'user not found'})
+        res.status(HttpStatusCode.BadRequest).json({error : 'user not found'})
       else if(userExists && !isValidPassword)
         res.status(HttpStatusCode.BadRequest).json({error : 'Wrong username or password'})
       else{
