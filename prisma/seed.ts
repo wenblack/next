@@ -56,7 +56,7 @@ async function main() {
     },
   })
 
-  await  prisma.product.create({
+  await  prisma.product.createMany({
     data :{
         name: "Torradas de Parma ",
         description: "Presunto de parma e rúcula em um pão com fermentação natural.",

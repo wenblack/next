@@ -17,7 +17,7 @@ if(req.method === 'POST'){
   
   if(!userExists){
     res.status(HttpStatusCode.BadRequest).json({error: "User not found"})
-  }else if(userExists && !userisAdmin){
+  }else if(!userExists || !userisAdmin){
     res.status(HttpStatusCode.BadRequest).json({error:"User don't have permission"})
   }else{
     const {name, description, price, categorie} = req.body
