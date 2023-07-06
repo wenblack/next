@@ -6,7 +6,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    const {email, password} = req.body
+    const {email} = req.query
+    const password = String(req.headers.authorization)
+    
     if(!email || !password){
       res.status(HttpStatusCode.BadRequest).json({error : 'Some required fields are missing'})
     }
