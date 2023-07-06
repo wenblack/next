@@ -6,7 +6,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-  if(req.method === 'POST'){
     const {email, password} = req.body
     if(!email || !password){
       res.status(HttpStatusCode.BadRequest).json({error : 'Some required fields are missing'})
@@ -26,7 +25,4 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
         const {isAdmin , id, email:userName } = userExists
         res.status(HttpStatusCode.Accepted).json({ id,  userName, token , isAdmin });
       }
-  }else{
-    res.status(HttpStatusCode.MethodNotAllowed).json({error : 'Wrong method'})
   }
-}
