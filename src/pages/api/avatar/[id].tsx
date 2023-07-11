@@ -1,15 +1,15 @@
 import prisma from "@/lib/prisma"
-import { DiskStorage } from "@/providers/DiskStorage"
+import DiskStorage from "@/providers/DiskStorage"
+
 import { HttpStatusCode } from "axios"
 import { NextApiRequest, NextApiResponse } from "next"
 
 
-class ProductImageController {
- async update(req: NextApiRequest, res: NextApiResponse) {
+export default async function AvatarPage  (req: NextApiRequest, res: NextApiResponse) {
     const avatarFilename = __filename
-    const {id} = req.query   
+    const id = String(req.query)   
     console.log(avatarFilename)
-    const diskStorage = new DiskStorage()
+    const diskStorage =  DiskStorage
 
     const product = await prisma.product.findUnique({
       where: { id: id}
@@ -35,6 +35,3 @@ class ProductImageController {
 
     res.status(HttpStatusCode.Accepted).json({ newImage: product.imgUrl })
   }
-
-}
-export default new ProductImageController()
