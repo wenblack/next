@@ -7,12 +7,12 @@ import { NextApiRequest, NextApiResponse } from "next"
 
 export default async function AvatarPage  (req: NextApiRequest, res: NextApiResponse) {
     const avatarFilename = __filename
-    const id = String(req.query)   
+    const id = req.query   
     console.log(avatarFilename)
     const diskStorage =  DiskStorage
 
     const product = await prisma.product.findUnique({
-      where: { id: id}
+      where: { id: String(id)}
     })
 
     if (!product) {
@@ -27,7 +27,7 @@ export default async function AvatarPage  (req: NextApiRequest, res: NextApiResp
     product.imgUrl = filename
 
     await prisma.product.update({
-     where: { id: id},
+     where: {id: String(id)},
       data: {
         imgUrl: product.imgUrl
       }
