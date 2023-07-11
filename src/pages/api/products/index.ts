@@ -15,7 +15,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
       if (total === 0)
       res.status(HttpStatusCode.BadRequest).json({message : "There is no products registered"});
       else  
-      res.json({total ,orders: result});
+      res.json({total ,products: result});
     }
     else{
   res.status(HttpStatusCode.MethodNotAllowed).json({error: 'Wrong method'});
