@@ -3,36 +3,31 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
-  directUrl = env("DIRECT_URL")
 }
 
-
 model User {
-  id String @id @default(uuid())
-
+  id       String   @id @default(uuid())
   name     String
   email    String   @unique
   password String
   isAdmin  Boolean? @default(false)
-
-  orders Order[]
+  orders   Order[]
 }
 
 model Product {
-  id String @id @default(uuid())
-
-  name        String       @unique
-  description String
-  price       Decimal
-  imgUrl      String?
-  categorie   String? @default("Prato principal")
-  ingredients ingredient[]
-  orders      Order[]
-  
-  categorieName  categorie?    @relation(fields: [categorie], references: [name])
+  id            String       @id @default(uuid())
+  name          String       @unique
+  description   String
+  price         Decimal
+  imgUrl        String?
+  categorie     String?      @default("Prato principal")
+  orders        Order[]
+  categorieName categorie?   @relation(fields: [categorie], references: [name])
+  ingredients   ingredient[] @relation("ProductToingredient")
 }
 
 model Order {
@@ -43,16 +38,15 @@ model Order {
   amount       Int      @default(1)
   status       String?  @default("Pendente")
   createdAt    DateTime @default(now())
-
-  userName    User    @relation(fields: [user], references: [email])
-  productname Product @relation(fields: [product], references: [name])
+  productname  Product  @relation(fields: [product], references: [name])
+  userName     User     @relation(fields: [user], references: [email])
 }
 
 model ingredient {
   id       Int       @id @default(autoincrement())
   name     String    @unique
   imageUlr String
-  products Product[]
+  products Product[] @relation("ProductToingredient")
 }
 
 model categorie {
@@ -60,4 +54,3 @@ model categorie {
   name     String    @unique
   products Product[]
 }
-

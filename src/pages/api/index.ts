@@ -2,8 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 
  const urls = { 
-    "products": "https://next-liart-delta.vercel.app/api/products/", 
-    "orders": "https://next-liart-delta.vercel.app/api/orders",
+    "products": "https://wenblack-ubiquitous-space-trout-4qjrprppv57cjjg6-3000.preview.app.github.dev/api/products/", 
+    "orders": "https://wenblack-ubiquitous-space-trout-4qjrprppv57cjjg6-3000.preview.app.github.dev/api/orders",
 }
 
 
